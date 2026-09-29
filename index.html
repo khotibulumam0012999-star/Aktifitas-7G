@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aktifitas 7G</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/9805/9805578.png" type="image/x-icon">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #FFF8F3; /* Warna dasar terang ceria */
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      height: 100vh;
+      height: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .iframe-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #FFF8F3;
+    }
+
+
+    /* ========================================
+       LOADING SCREEN
+       LIGHT PLAYFUL DESIGN (Zootopia Theme)
+       ======================================== */
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* Gradien cerah oranye dan krem */
+      background:
+        radial-gradient(
+          circle at 10% 20%,
+          rgba(255, 107, 53, 0.15),
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 90% 80%,
+          rgba(139, 92, 246, 0.15),
+          transparent 40%
+        ),
+        linear-gradient(
+          135deg,
+          #FFF8F3 0%,
+          #FFEEE7 50%,
+          #FBF4FF 100%
+        );
+
+      z-index: 10;
+
+      transition:
+        opacity 0.6s ease,
+        visibility 0.6s ease;
+    }
+
+    .loading.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+
+    /* ========================================
+       BACKGROUND LIGHT / BUBBLES
+       ======================================== */
+
+    .background-glow {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .glow-left {
+      width: 300px;
+      height: 300px;
+      left: -100px;
+      top: 5%;
+      background: rgba(76, 175, 80, 0.15); /* Hijau lembut */
+    }
+
+    .glow-right {
+      width: 350px;
+      height: 350px;
+      right: -120px;
+      bottom: -100px;
+      background: rgba(255, 87, 34, 0.15); /* Oranye lembut */
+    }
+
+    .glow-top {
+      width: 200px;
+      height: 200px;
+      right: 20%;
+      top: -80px;
+      background: rgba(139, 92, 246, 0.15); /* Ungu lembut */
+    }
+
+
+    /* ========================================
+       FLOATING INFORMATION ICONS
+       ======================================== */
+
+    .floating-icon {
+      position: absolute;
+
+      width: 45px;
+      height: 45px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 14px;
+
+      background: #FFFFFF;
+
+      border: none;
+
+      box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.08);
+
+      font-size: 22px;
+
+      animation: floating 4s ease-in-out infinite;
+
+      opacity: 1;
+    }
+
+    .floating-one {
+      top: 15%;
+      left: 17%;
+      animation-delay: 0s;
+    }
+
+    .floating-two {
+      top: 19%;
+      right: 18%;
+      animation-delay: 1s;
+    }
+
+    .floating-three {
+      bottom: 17%;
+      left: 19%;
+      animation-delay: 1.8s;
+    }
+
+    .floating-four {
+      bottom: 14%;
+      right: 18%;
+      animation-delay: 2.6s;
+    }
+
+    @keyframes floating {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-12px) rotate(5deg);
+      }
+
+    }
+
+
+    /* ========================================
+       MAIN CARD (Glassmorphism -> Clean White Card)
+       ======================================== */
+
+    .loading-content {
+      position: relative;
+      z-index: 5;
+
+      width: min(90%, 460px);
+
+      padding: 40px 30px 34px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      text-align: center;
+
+      background: #FFFFFF;
+
+      border: 1px solid rgba(255, 255, 255, 1);
+
+      border-radius: 32px;
+
+      box-shadow:
+        0 25px 60px rgba(255, 107, 53, 0.15),
+        0 10px 20px rgba(0, 0, 0, 0.05);
+
+      animation: cardAppear 0.8s ease-out;
+    }
+
+    @keyframes cardAppear {
+
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+    }
+
+
+    /* ========================================
+       KNOWLEDGE ORBIT (Warna Cerah)
+       ======================================== */
+
+    .knowledge-loader {
+      position: relative;
+
+      width: 170px;
+      height: 170px;
+
+      margin-bottom: 25px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .orbit {
+      position: absolute;
+
+      width: 150px;
+      height: 150px;
+
+      border: 2px solid rgba(255, 87, 34, 0.3); /* Oranye */
+
+      border-radius: 50%;
+
+      animation: rotateOrbit 8s linear infinite;
+    }
+
+    .orbit::after {
+      content: "";
+
+      position: absolute;
+
+      width: 12px;
+      height: 12px;
+
+      top: -6px;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      border-radius: 50%;
+
+      background: #FF5722; /* Oranye Fox */
+
+      box-shadow:
+        0 0 0 4px rgba(255, 87, 34, 0.15),
+        0 0 12px rgba(255, 87, 34, 0.6);
+    }
+
+
+    .orbit-inner {
+      position: absolute;
+
+      width: 112px;
+      height: 112px;
+
+      border: 2px solid rgba(139, 92, 246, 0.3); /* Ungu */
+
+      border-radius: 50%;
+
+      animation: rotateOrbitReverse 6s linear infinite;
+    }
+
+    .orbit-inner::after {
+      content: "";
+
+      position: absolute;
+
+      width: 10px;
+      height: 10px;
+
+      right: -5px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      border-radius: 50%;
+
+      background: #8B5CF6; /* Ungu */
+
+      box-shadow:
+        0 0 0 4px rgba(139, 92, 246, 0.15),
+        0 0 12px rgba(139, 92, 246, 0.6);
+    }
+
+    @keyframes rotateOrbit {
+
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+
+    }
+
+    @keyframes rotateOrbitReverse {
+
+      from {
+        transform: rotate(360deg);
+      }
+
+      to {
+        transform: rotate(0deg);
+      }
+
+    }
+
+
+    /* ========================================
+       CENTRAL GLOBE (Tema Cerah)
+       ======================================== */
+
+    .globe {
+
+      position: relative;
+
+      width: 70px;
+      height: 70px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      /* Gradasi hangat oranye */
+      background:
+        linear-gradient(
+          145deg,
+          #FFB74D,
+          #FF9800 48%,
+          #FF5722
+        );
+
+      border: 2px solid #FFFFFF;
+
+      box-shadow:
+        0 10px 20px rgba(255, 87, 34, 0.35),
+        inset 2px 2px 8px rgba(255, 255, 255, 0.4);
+
+      animation: globePulse 3s ease-in-out infinite;
+    }
+
+    .globe::before {
+      content: "";
+
+      position: absolute;
+
+      width: 48px;
+      height: 48px;
+
+      border: 1.5px solid rgba(255, 255, 255, 0.7);
+
+      border-radius: 50%;
+    }
+
+    .globe::after {
+      content: "";
+
+      position: absolute;
+
+      width: 56px;
+      height: 22px;
+
+      border-top: 1.5px solid rgba(255, 255, 255, 0.6);
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.6);
+
+      border-radius: 50%;
+    }
+
+    .globe-symbol {
+      position: relative;
+      z-index: 2;
+
+      color: #FFFFFF;
+
+      font-size: 30px;
+
+      font-weight: 600;
+    }
+
+    @keyframes globePulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.08);
+      }
+
+    }
+
+
+    /* ========================================
+       KNOWLEDGE ICONS (Kartu Putih Kecil)
+       ======================================== */
+
+    .knowledge-icon {
+      position: absolute;
+
+      width: 38px;
+      height: 38px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 12px;
+
+      background: #FFFFFF;
+
+      border: none;
+
+      box-shadow:
+        0 6px 15px rgba(0, 0, 0, 0.1);
+
+      font-size: 18px;
+
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    .icon-book {
+      top: 0;
+      left: 12px;
+      animation-delay: 0.3s;
+    }
+
+    .icon-light {
+      top: 14px;
+      right: 2px;
+      animation-delay: 0.8s;
+    }
+
+    .icon-document {
+      bottom: 6px;
+      right: 15px;
+      animation-delay: 1.3s;
+    }
+
+    .icon-star {
+      bottom: 5px;
+      left: 13px;
+      animation-delay: 1.8s;
+    }
+
+    .icon-chart {
+      top: 50%;
+      left: -2px;
+      animation-delay: 2.2s;
+    }
+
+    @keyframes iconFloat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+
+    }
+
+
+    /* ========================================
+       BRAND (Warna Zootopia/Oranye-Merah)
+       ======================================== */
+
+    .brand {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+      
+      /* Efek Teks Gradien Oranye-Merah seperti gambar */
+      background: linear-gradient(to right, #FF6B35, #FF4D4D);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: #FF4D4D; /* Fallback */
+    }
+
+    .brand-subtitle {
+      color: #757575; /* Abu-abu cerah */
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      margin-bottom: 25px;
+    }
+
+
+    /* ========================================
+       LOADING TEXT
+       ======================================== */
+
+    .loading-text {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #FF6B35; /* Oranye cerah */
+      letter-spacing: 0.2px;
+    }
+
+    .loading-text::after {
+      content: '';
+      animation: dots 2s infinite;
+    }
+
+    @keyframes dots {
+
+      0%,
+      20% {
+        content: '';
+      }
+
+      40% {
+        content: '.';
+      }
+
+      60% {
+        content: '..';
+      }
+
+      80%,
+      100% {
+        content: '...';
+      }
+
+    }
+
+
+    /* ========================================
+       PROGRESS BAR (Warna Cerah)
+       ======================================== */
+
+    .progress-container {
+      width: 190px;
+      height: 6px; /* Sedikit lebih tebal */
+      margin-top: 15px;
+      overflow: hidden;
+      border-radius: 20px;
+      background: rgba(255, 87, 34, 0.1); /* Oranye sangat muda */
+    }
+
+    .progress-bar {
+      width: 45%;
+      height: 100%;
+      border-radius: 20px;
+      
+      /* Gradasi cerah oranye ke ungu */
+      background:
+        linear-gradient(
+          90deg,
+          #FF6B35,
+          #FF4D4D,
+          #8B5CF6
+        );
+
+      animation: loadingProgress 1.6s ease-in-out infinite;
+    }
+
+    @keyframes loadingProgress {
+
+      0% {
+        transform: translateX(-120%);
+      }
+
+      50% {
+        transform: translateX(100%);
+      }
+
+      100% {
+        transform: translateX(320%);
+      }
+
+    }
+
+
+    /* ========================================
+       MOBILE RESPONSIVE
+       ======================================== */
+
+    @media (max-width: 480px) {
+
+      .loading-content {
+        width: 88%;
+        padding: 32px 22px 28px;
+        border-radius: 27px;
+      }
+
+      .knowledge-loader {
+        transform: scale(0.92);
+        margin-bottom: 18px;
+      }
+
+      .brand {
+        font-size: 1.4rem;
+      }
+
+      .brand-subtitle {
+        font-size: 0.78rem;
+        margin-bottom: 22px;
+      }
+
+      .loading-text {
+        font-size: 0.88rem;
+      }
+
+      .floating-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- ========================================
+         LOADING SCREEN
+         ======================================== -->
+
+    <div class="loading" id="loading">
+
+      <!-- Background Glow -->
+      <div class="background-glow glow-left"></div>
+      <div class="background-glow glow-right"></div>
+      <div class="background-glow glow-top"></div>
+
+
+      <!-- Floating Knowledge Icons -->
+
+      <div class="floating-icon floating-one">
+        📚
+      </div>
+
+      <div class="floating-icon floating-two">
+        💡
+      </div>
+
+      <div class="floating-icon floating-three">
+        📄
+      </div>
+
+      <div class="floating-icon floating-four">
+        ⭐
+      </div>
+
+
+      <!-- Main Card -->
+
+      <div class="loading-content">
+
+        <!-- Knowledge Orbit -->
+
+        <div class="knowledge-loader">
+
+          <div class="orbit"></div>
+
+          <div class="orbit-inner"></div>
+
+
+          <div class="knowledge-icon icon-book">
+            📖
+          </div>
+
+          <div class="knowledge-icon icon-light">
+            💡
+          </div>
+
+          <div class="knowledge-icon icon-document">
+            📄
+          </div>
+
+          <div class="knowledge-icon icon-star">
+            ⭐
+          </div>
+
+          <div class="knowledge-icon icon-chart">
+            📊
+          </div>
+
+
+          <!-- Globe -->
+
+          <div class="globe">
+
+            <span class="globe-symbol">
+              ◉
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- Brand -->
+
+        <div class="brand">
+          7G Activity
+        </div>
+
+        <div class="brand-subtitle">
+          The Grate Generation
+        </div>
+
+
+        <!-- Loading -->
+
+        <div class="loading-text">
+          Memuat
+        </div>
+
+        <div class="progress-container">
+
+          <div class="progress-bar"></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================
+         IFRAME APLIKASI
+         TIDAK DIUBAH
+         ======================================== -->
+
+    <div class="iframe-container">
+
+      <iframe
+        id="appFrame"
+        src=""
+        allow="fullscreen; camera; microphone"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads">
+      </iframe>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    // =============================================
+    // URL GOOGLE APPS SCRIPT
+    // TIDAK DIUBAH
+    // =============================================
+
+    var APP_URL = "https://script.google.com/macros/s/AKfycbxoKGa5C5OV-k1Z4JVLlqRL18JQ9c_lsTj-jvWHmPmTNFSuFam-8fsenuyjv4NwdxXY/exec";
+
+    var appFrame = document.getElementById('appFrame');
+
+    var loading = document.getElementById('loading');
+
+
+    // =============================================
+    // HANDLER REQUEST DARI IFRAME
+    // TIDAK DIUBAH
+    // =============================================
+
+    window.addEventListener('message', function(event) {
+
+      try {
+
+        var data = event.data;
+
+        if (!data || typeof data !== 'object') return;
+
+
+        // 1. Buka tab kosong
+
+        if (data.action === 'openBlank') {
+
+          window.open('', '_blank');
+
+          return;
+        }
+
+
+        // 2. Buka URL langsung
+
+        if (data.action === 'openDownload' && data.url) {
+
+          window.open(data.url, '_blank');
+
+          return;
+        }
+
+
+        // 3. Fullscreen
+
+        if (data.action === 'requestFullscreen') {
+
+          var el = document.documentElement;
+
+          var fn =
+            el.requestFullscreen ||
+            el.webkitRequestFullscreen ||
+            el.msRequestFullscreen;
+
+          if (fn) fn.call(el).catch(function(){});
+
+          return;
+        }
+
+      } catch(e) {
+
+        console.warn('PostMessage error:', e);
+
+      }
+
+    });
+
+
+    // =============================================
+    // LOGIKA DELAY 3 DETIK
+    // TIDAK DIUBAH
+    // =============================================
+
+    var startTime = Date.now();
+
+    var MIN_LOAD_TIME = 3000;
+
+
+    function loadApp() {
+
+      var fullUrl = window.location.href;
+
+      var params =
+        new URLSearchParams(window.location.search);
+
+      var id = params.get('id');
+
+      var targetUrl = APP_URL;
+
+
+      if (id) {
+
+        if (targetUrl.indexOf('?') !== -1) {
+
+          targetUrl += "&id=" + id;
+
+        } else {
+
+          targetUrl += "?id=" + id;
+
+        }
+
+      }
+
+
+      appFrame.src = targetUrl;
+
+    }
+
+
+    function hideLoading() {
+
+      loading.classList.add('hidden');
+
+    }
+
+
+    appFrame.addEventListener('load', function() {
+
+      var elapsedTime =
+        Date.now() - startTime;
+
+      var remainingTime =
+        MIN_LOAD_TIME - elapsedTime;
+
+
+      if (remainingTime > 0) {
+
+        setTimeout(
+          hideLoading,
+          remainingTime
+        );
+
+      } else {
+
+        hideLoading();
+
+      }
+
+    });
+
+
+    window.addEventListener(
+      'DOMContentLoaded',
+      loadApp
+    );
+
+  </script>
+</body>
+</html>
